@@ -1,0 +1,54 @@
+tenha python instalado
+tenha pip instalado
+
+CRIAR AMBIENTE DE DESENVOLVIMENTO PYTHON E ATIVÁ-LO
+
+- Abra o terminal e digite python -m venv nome_do_ambiente virtual
+
+- Ative o ambiente virtual digitando o seguinte comando dento do diretório do ambiente virtual python: Scripts/activate
+
+CRIAR PROJETO DJANGO E RODÁ-LO
+
+- Instale o django no ambiente virtual python, com o comando: pip install django
+
+- No diretório que desejar, rodar o comando django-admin startproject nome_do_projeto
+
+- Para testar, basta entrar no diretório do projeto e rodar o comando: python manage.py runserver
+
+- Acessar pelo navegador o link: http://127.0.0.1:8000/
+
+
+
+python manage.py migrate - Rodas as migrations para o banco sqlite
+
+python manage.py startapp polls 
+
+Criar models no polls/models.py
+
+Cria migration para aplicar - python manage.py makemigrations polls
+
+Roda a migration - python manage.py migrate
+
+Acessar o shell, forma de insteragir com o ambiente - python manage.py shell
+
+DENTRO DO SHELL
+from polls.models import Question, Choice - fazer toda vez que entrar no shell pra importar os models
+
+from django.utils import timezone - fazer toda vez que for adicionar
+
+q = Question (question_text="Já leu esse livro?",pub_date=timezone.now()) - Adicionar question
+
+q = Question (question_text="Já leu esse livro?",pub_date=timezone.now())
+q.save()
+q.question_text - Assim o objeto já vai estar na base de dados e vai ser possível printá-lo
+Question.objects.all() - Printar
+
+q = Question.objects.get(id=1) - pegar um objeto específico
+
+q.choice_set.create(choice_text="Já li", votes=0) - adicionar choice dessa pergunta
+
+FORA DO SHELL
+python manage.py createsuperuser - criar um usuário para um painel de administrador nativo do django
+
+127.0.0.1:8000/polls
+127.0.0.1:8000/admin
