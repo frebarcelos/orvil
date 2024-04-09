@@ -31,11 +31,11 @@ class Livro(models.Model):
 
 class Resenha(models.Model):
     conteudo = models.CharField(max_length=500)
-    data_publicacao = models.DateField()
+    data_publicacao = models.DateField(auto_now_add=True)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    licro_id = models.ForeignKey(Livro, on_delete=models.CASCADE)
+    livro_id = models.ForeignKey(Livro, on_delete=models.CASCADE)
 
-class Avaliação(models.Model):
+class Avaliacao(models.Model):
     nota = models.IntegerField()
     comentario = models.CharField(max_length=150)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)

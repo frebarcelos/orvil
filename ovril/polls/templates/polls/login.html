@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="cadastro-form">
+            <h2>Ainda não tem cadastro?</h2>
+            <p>Descubra novos mundos e compartilhe suas aventuras literárias conosco! Cadastre-se agora para começar a explorar e compartilhar suas resenhas de livros favoritos. Junte-se à nossa comunidade de leitores apaixonados clicando no botão abaixo.</p>
+            <a href="http://127.0.0.1:8000/polls/register">
+                <button >Cadastre-se aqui!</button>
+            </a>
+            
+        </div>
+        <div class="login-form">
+            <img src="../public/logo_ovril.svg" class="logo"alt="Logo">
+            <div class="dadosUsuario">  
+                <input type="text" placeholder="Usuário">
+                <input type="password" placeholder="Senha">
+            </div>
+            <button type="submit">Entrar</button>
+        </div>
+    </div>
+</body>
+</html>
