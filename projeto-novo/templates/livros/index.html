@@ -1,13 +1,57 @@
 {% extends 'livros/base.html' %}
 {% load static %}
-{%block content%}
-    <div class="container">
-        <a href="{% url 'login' %}">ir para login</a>    
-        {%for livro in livros %}
-        {{livro.titulo}}
-        {{livro.autor}}
-        <br>
-        {%endfor%}
-    </div>
-{%endblock%}
 
+{% block content %}
+    <div class="display__cards"> 
+        <div id="row row-cols-1 row-cols-md-2 g-4">
+            <div class="home_grid">
+            {% for livro in livros %}
+            <div class="card mb-3" style="width: 500px;">
+                <div class="row g-0">
+                  <div class="col-md-6">
+                    <img src="{{ livro.image }}" class="img-fluid rounded-start" alt="Imagem de {{ livro.Title }}" style="width: 100%;">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ livro.Title }} - {{ livro.authors }}</h5>
+                      <p class="card-text">{{ livro.description|truncatechars:100 }}</p>
+                      <p class="card-text"><small class="text-body-secondary">{{ livro.categories }}</small></p>
+                      <a href="#" class="btn btn-primary">Ver resenhas</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                    
+            {% endfor %}
+        </div>
+        </div>
+
+        <nav aria-label="pagination" class="paginacao">
+            <ul class="pagination justify-content-end">
+              {% if livros.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ livros.previous_page_number }}">Anterior</a></li>
+              {% endif %}
+              {% for num in page_range %}
+                        {% if num == '...' %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        {% elif livros.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+            {% if livros.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ livros.next_page_number }}">Próxima</a></li>
+            {% endif %}              
+            </ul>
+          </nav>
+
+    </div>
+{% endblock %}
