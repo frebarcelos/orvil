@@ -1,4 +1,12 @@
 import os
+import sys
+
+# Caminho para o diretório raiz do projeto
+project_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+# Adicione o diretório raiz ao sys.path
+sys.path.append(project_root_path)
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'setup.settings')
 import django
 django.setup()
@@ -6,7 +14,7 @@ import pandas as pd
 from livros.models import Livro
 
 # Caminho para o arquivo CSV
-csv_file_path = 'books_data.csv'  # Substitua pelo caminho do seu arquivo CSV
+csv_file_path = 'exported_books.csv'  # Substitua pelo caminho do seu arquivo CSV
 
 # Leia o arquivo CSV
 df = pd.read_csv(csv_file_path)
