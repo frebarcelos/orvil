@@ -15,8 +15,8 @@
             </ul>
 
             <div class="d-flex justify-content-center mx-auto">
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2 " style="width: 400px;" type="search" placeholder="Buscar Livro" aria-label="Search">
+                <form class="d-flex" role="search" action="{% url 'buscar' %}">
+                    <input class="form-control me-2 " style="width: 400px;" type="search" placeholder="Buscar Livro" aria-label="Search" name="buscar">
                     <button class="btn btn-outline-secondary" type="submit">Buscar</button>
                 </form>
             </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from livros.models import Livro
+from livros.models import Livro, Resenha, Usuario
 from django.core.paginator import Paginator
 
 def get_page_range(livros_pagina, num_pages_to_show=1):
@@ -37,6 +37,22 @@ def login(request):
 
 def livro(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id)
-    return render(request, 'livros/livro.html', {"livro": livro})
+    resenhas = Resenha.objects.filter(livro=livro)
+    return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas})
 
+def buscar(request):
+    livros = Livro.objects.all()
+    if "buscar" in request.GET:
+        nome_a_buscar = request.GET['buscar']
+        if nome_a_buscar:           
+            livros = livros.filter(Title__icontains=nome_a_buscar) | \
+                     livros.filter(authors__icontains=nome_a_buscar) | \
+                     livros.filter(publisher__icontains=nome_a_buscar) | \
+                     livros.filter(categories__icontains=nome_a_buscar)
+
+    paginator = Paginator(livros, 10)
+    page_number = request.GET.get('page', 1)
+    livros_pagina = paginator.page(page_number)
+    page_range = paginator.page_range
+    return render(request, 'livros/buscar.html', {"livros": livros_pagina, "page_range": page_range})
 

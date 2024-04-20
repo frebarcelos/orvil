@@ -9,7 +9,7 @@ class ListandoLivros(admin.ModelAdmin):
     list_per_page = 10
 
 class ListandoResenhas(admin.ModelAdmin):
-    list_display = ("id", "titulo", "livro", "usuario", "data_publicacao")
+    list_display = ("id", "titulo", "livro", "usuario", "data_publicacao", "media_avaliacoes", "num_avaliacoes_resenhas")
     list_display_links = ("id", "titulo")
     search_fields = ("titulo", "livro__Title", "usuario__nome")
     list_per_page = 10

@@ -34,3 +34,27 @@
     display: flex;
     flex-direction: column;
 }
+.avalicao_resenha {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-end;
+}
+.rating {
+    color: blue;
+    margin-bottom: 10px;
+}
+.div_titulo {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+}
+.titulo_resenha {
+    color: blue;
+    font-size: 2rem;
+    margin-right: 20px;
+}
+.botao_escrever_resenha {
+    margin: 20px 0; 
+}
