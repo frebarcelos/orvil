@@ -1,8 +1,34 @@
 {% extends 'livros/base.html' %}
 {% load static %}
 {%block content%}
-    <div class="container">     
-        {{livro.Title}}           
+    <div class="div_resenhas_livro">  
+        <div class="div_resenhas_image"><img src="{{ livro.image }}" class="img-fluid rounded-start" alt="Imagem de {{ livro.Title }}" style="width: 100%;"></div>  
+        <div class="div_tabs_resenhas">
+        <ul class="nav nav-tabs " id="myTab" role="tablist" >
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Detalhes do Livro</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Resenhas</button>
+            </li>            
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ livro.Title }}</h5>
+                        <p class="card-text">Descrição: {{ livro.description }}</p>
+                        <p class="card-text">Autores: {{ livro.authors }}</p>
+                        <p class="card-text">Editora: {{ livro.publisher }}</p>
+                        <p class="card-text">Data de Publicação: {{ livro.publishedDate }}</p>
+                        <p class="card-text">Categorias: {{ livro.categories }}</p>
+                        <p class="card-text">Link para visualização no googlebooks: <a href="{{ livro.previewLink }}">{{ livro.previewLink }}</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">1Resenhas, segunda resenha </div>          
+          </div>   
+        </div>    
            </div>
 {%endblock%}
 

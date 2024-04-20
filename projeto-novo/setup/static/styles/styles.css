@@ -18,3 +18,19 @@
     margin: 20px;
     padding: 20px;
 }
+.div_resenhas_livro {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 20px
+}
+.div_resenhas_image {
+    width: 30%;
+    padding: 20px;
+}
+.div_tabs_resenhas {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
