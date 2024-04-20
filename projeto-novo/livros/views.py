@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from livros.models import Livro
 from django.core.paginator import Paginator
 
-def get_page_range(livros_pagina, num_pages_to_show=3):
+def get_page_range(livros_pagina, num_pages_to_show=1):
     total_pages = livros_pagina.paginator.num_pages
     current_page = livros_pagina.number    
 
@@ -34,5 +34,9 @@ def index(request):
 
 def login(request):
     return render(request, 'livros/login.html')
+
+def livro(request, livro_id):
+    livro = get_object_or_404(Livro, pk=livro_id)
+    return render(request, 'livros/livro.html', {"livro": livro})
 
 
