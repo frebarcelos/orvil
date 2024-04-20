@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from livros.models import Livro, Resenha, Avaliacao, Usuario
+from livros.models import Livro, Resenha, Avaliacao
 
 class ListandoLivros(admin.ModelAdmin):
     list_display = ("id", "Title", "authors", "categories")
@@ -20,13 +19,7 @@ class ListandoAvaliacoes(admin.ModelAdmin):
     search_fields = ("resenha__titulo", "usuario__nome")
     list_per_page = 10
 
-class ListandoUsuarios(admin.ModelAdmin):
-    list_display = ("id", "nome", "email")
-    list_display_links = ("id", "nome")
-    search_fields = ("nome", "email")
-    list_per_page = 10
 
 admin.site.register(Livro, ListandoLivros)
 admin.site.register(Resenha, ListandoResenhas)
 admin.site.register(Avaliacao, ListandoAvaliacoes)
-admin.site.register(Usuario, ListandoUsuarios)

@@ -4,6 +4,22 @@
 {% block content %}
     <div class="display__cards"> 
     {% if livros %}
+    <form class="d-flex order__busca" role="search" action="{% url 'buscar' %}">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Ordenar por
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=Title">Titulo Asc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-Title">Titulo Desc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=authors">Autor Asc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-authors">Autor Desc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=publishedDate">data de publicação Asc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-publishedDate">data de publicação Desc</a></li>
+
+            </ul>
+          </div>
+    </form>
         <div id="row row-cols-1 row-cols-md-2 g-4">
             <div class="home_grid">            
             {% for livro in livros %}
@@ -17,7 +33,7 @@
                       <h5 class="card-title">{{ livro.Title }} - {{ livro.authors }}</h5>
                       <p class="card-text">{{ livro.description|truncatechars:100 }}</p>
                       <p class="card-text"><small class="text-body-secondary">{{ livro.categories }}</small></p>
-                      <a href="{% url 'livro' livro.id %}" class="btn btn-primary">Ver resenhas</a>
+                      <a href="{% url 'livro' livro.id %}" class="btn btn-primary">Detalhes do Livro</a>
                     </div>
                   </div>
                 </div>
@@ -55,7 +71,7 @@
           </nav>
     
     {% else %}
-          <p>Não foram encontrados livros disponíveis!</p>
+          <div class="nao_foram_encotrados">Não foram encontrados livros disponíveis!</div>
       {% endif %}
     </div>
 {% endblock %}

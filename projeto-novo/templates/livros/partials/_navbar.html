@@ -5,23 +5,28 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Minhas Resenhas</a>
-                </li>
-            </ul>
-
+            {% if user.is_authenticated %}           
+            
             <div class="d-flex justify-content-center mx-auto">
                 <form class="d-flex" role="search" action="{% url 'buscar' %}">
                     <input class="form-control me-2 " style="width: 400px;" type="search" placeholder="Buscar Livro" aria-label="Search" name="buscar">
+                    <div class="dropdown filtro_cateogrias">
+                        <select class="form-select" name="categoria">
+                            <option value="" selected disabled>Selecionar Categoria</option>
+                            {% for categoria in request.categorias_disponiveis %}
+                                <option value="{{ categoria }}">{{ categoria }}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
                     <button class="btn btn-outline-secondary" type="submit">Buscar</button>
                 </form>
             </div>
 
-            <a class="btn btn-primary ms-auto" href="{% url 'login' %}">Login</a>
+            <div class="div_usuario">
+            <div class="div_username" >Bem-vindo {{user.username}}!</div>
+            <a class="btn btn-primary ms-auto" href="{% url 'logout' %}">Sair</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </nav>
