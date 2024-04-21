@@ -69,3 +69,28 @@ class CadastroForms(forms.Form):
             }
         ),
     )
+    
+class ResenhaForms(forms.Form):
+    titulo_resenha=forms.CharField(
+        label='Titulo', 
+        required=True, 
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ex.: Uma boa Resenha',
+            }
+        )
+    )
+    texto_resenha=forms.CharField(
+        label='Resenha', 
+        required=True, 
+        max_length=3000,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Eu achei muito bom esse livro ...',
+                'rows':'3'
+            }
+        )
+    )
