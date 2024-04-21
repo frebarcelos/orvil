@@ -27,7 +27,9 @@
                 </div>
             </div>
             <div class="tab-pane fade " id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"> 
-            <button type="button " class="btn btn-primary btn-lg botao_escrever_resenha">Escrever resenha</button>
+            <button type="button" class="btn btn-primary btn-lg botao_escrever_resenha" data-bs-toggle="modal" data-bs-target="#modalEscreverResenha">
+                    Escrever resenha
+            </button>
             {% if resenhas %}
                 {% for resenha in resenhas %}
                   <div class="card" style="width: 100%; margin-bottom: 20px;">
@@ -65,6 +67,29 @@
             {% else %}
                 <p>Ainda não foram feitas resenhas para este livro.</p>
             {% endif %}
+            <div class="modal fade" id="modalEscreverResenha" tabindex="-1" aria-labelledby="modalEscreverResenhaLabel" aria-hidden="true">
+                <div class="modal-dialog ">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalEscreverResenhaLabel">Escrever Resenha</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">                                              
+                      <form action="{% url 'livro' livro.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            {% for field in form.visible_fields %}
+                            <div class="form-label" style="margin-bottom: 10px;">
+                                <label for="{{ field.id_for_label }}" style="color:#292929; margin-bottom: 5px;">{{field.label}}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}                        
+                        <button type="submit" class="btn btn-primary" >Enviar Resenha</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>          
           </div>   
         </div>    

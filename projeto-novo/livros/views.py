@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from livros.models import Livro, Resenha
 from django.core.paginator import Paginator
 from urllib.parse import urlencode
-from livros.forms import LoginForms, CadastroForms
+from livros.forms import LoginForms, CadastroForms,ResenhaForms
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -41,12 +41,24 @@ def index(request):
     return render(request, 'livros/index.html', {"livros": livros_pagina, "page_range": page_range})
 
 def livro(request, livro_id):
+    form = ResenhaForms()
+    livro = get_object_or_404(Livro, pk=livro_id)
     if not request.user.is_authenticated:
         messages.error(request, 'Usuário não logado')
         return redirect('login')
-    livro = get_object_or_404(Livro, pk=livro_id)
+    if request.method == 'POST':
+        form = ResenhaForms(request.POST)
+        if form.is_valid():
+            titulo = form['titulo_resenha'].value()
+            texto = form['texto_resenha'].value()
+            usuario = request.user
+
+            resenha = Resenha.objects.create(livro=livro, usuario=usuario, titulo=titulo, texto=texto)
+            resenha.calcular_media_avaliacoes()
+            resenha.calcular_num_avaliacoes_resenhas()
+   
     resenhas = Resenha.objects.filter(livro=livro)
-    return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas})
+    return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas, "form": form})
 
 def buscar(request):
     if not request.user.is_authenticated:
