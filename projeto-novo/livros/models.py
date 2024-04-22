@@ -20,9 +20,9 @@ class Livro(models.Model):
 
 class Resenha(models.Model):
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE, default="", null=True)
     titulo = models.CharField(max_length=255, null=False, blank=False)
-    texto = models.TextField(null=False, blank=False)
+    texto = models.TextField(null=False, blank=False, max_length=3000)
     data_publicacao = models.DateTimeField(auto_now_add=True)
     media_avaliacoes = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     num_avaliacoes_resenhas = models.IntegerField(default=0)
@@ -42,7 +42,7 @@ class Resenha(models.Model):
 
 class Avaliacao(models.Model):
     resenha = models.ForeignKey(Resenha, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE,  null=True)
     nota = models.CharField(max_length=9, null=False, blank=False, choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')])
 
     def save(self, *args, **kwargs):

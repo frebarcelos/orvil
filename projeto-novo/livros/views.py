@@ -46,6 +46,8 @@ def index(request):
 def livro(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id)
     resenhas = Resenha.objects.filter(livro=livro).order_by('-data_publicacao')
+    form = ResenhaForms()
+    form_avaliacao = NotaForm()
     
     if not request.user.is_authenticated:
         messages.error(request, 'Usuário não logado')
@@ -79,9 +81,7 @@ def livro(request, livro_id):
                 resenha.calcular_num_avaliacoes_resenhas() 
                 messages.success(request, 'Resenha criada com sucesso.')
                 return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
-    else:
-        form = ResenhaForms()
-        form_avaliacao = NotaForm()
+
 
     if "ordem" in request.GET:
         ordem = request.GET['ordem']
