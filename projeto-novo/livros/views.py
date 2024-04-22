@@ -59,11 +59,14 @@ def livro(request, livro_id):
                 nota = form.cleaned_data['nota']
                 resenha_id = form.cleaned_data['resenha_id']
                 resenha = get_object_or_404(Resenha, pk=resenha_id)
-                if Avaliacao.objects.filter(resenha=resenha, usuario=usuario).exists():
-                    messages.error(request, 'Você já avaliou essa resenha.')
-                    return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
-                avaliacao = Avaliacao.objects.create(resenha=resenha, usuario=usuario, nota=nota)
-                messages.success(request, 'Avaliação registrada com sucesso.')
+                avaliacao = Avaliacao.objects.filter(resenha=resenha, usuario=usuario).first()
+                if avaliacao:
+                    avaliacao.nota = nota
+                    avaliacao.save()
+                    messages.success(request, 'Avaliação atualizada com sucesso.')
+                else:
+                    Avaliacao.objects.create(resenha=resenha, usuario=usuario, nota=nota)
+                    messages.success(request, 'Avaliação registrada com sucesso.')
                 return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
         else:  
             form = ResenhaForms(request.POST)
