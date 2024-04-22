@@ -9,11 +9,11 @@
               <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Detalhes do Livro</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Resenhas</button>
+              <button class="nav-link " id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Resenhas</button>
             </li>            
           </ul>
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            <div class="tab-pane fade show active " id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">{{ livro.Title }}</h5>
@@ -26,10 +26,32 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade " id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"> 
-            <button type="button" class="btn btn-primary btn-lg botao_escrever_resenha" data-bs-toggle="modal" data-bs-target="#modalEscreverResenha">
-                    Escrever resenha
-            </button>
+            <div class="tab-pane fade  " id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0"> 
+            <div class="div_botoes_resenhas">
+                <button type="button" class="btn btn-primary btn-lg botao_escrever_resenha" data-bs-toggle="modal" data-bs-target="#modalEscreverResenha">
+                        Escrever resenha
+                </button>
+                <div class="d-flex ">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Ordenar por
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=titulo&abrir=resenhas">Titulo (A-Z)</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=-titulo&abrir=resenhas">Titulo (Z-A)</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=-data_publicacao&abrir=resenhas">Mais Recentes</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=data_publicacao&abrir=resenhas">Mais Antigas</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=-media_avaliacoes&abrir=resenhas">Melhores Avaliadas</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=media_avaliacoes&abrir=resenhas">Piores Avaliadas</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=-num_avaliacoes_resenhas&abrir=resenhas">Mais Avaliadas</a></li>
+                          <li><a class="dropdown-item" href="{% url 'livro' livro.id %}?ordem=num_avaliacoes_resenhas&abrir=resenhas">Menos Avaliadas</a></li>
+                          
+                                             
+            
+                        </ul>
+                      </div>
+                    </div>
+            </div>
             {% if resenhas %}
                 {% for resenha in resenhas %}
                   <div class="card" style="width: 100%; margin-bottom: 20px;">
@@ -75,7 +97,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">                                              
-                      <form action="{% url 'livro' livro.id %}" method="post">
+                      <form action="{% url 'livro' livro.id %}" method="post" >
                         {% csrf_token %}
                         <div class="row">
                             {% for field in form.visible_fields %}
@@ -94,5 +116,16 @@
           </div>   
         </div>    
            </div>
+    <script>        
+        var abrir = new URLSearchParams(window.location.search).get('abrir');
+        if (abrir === "resenhas") {
+            document.getElementById('profile-tab').classList.add('active');
+            document.getElementById('profile-tab-pane').classList.add('show', 'active');
+            
+            document.getElementById('home-tab').classList.remove('active');
+            document.getElementById('home-tab-pane').classList.remove('show', 'active');
+        }
+    </script>
 {%endblock%}
+
 

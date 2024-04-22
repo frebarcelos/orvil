@@ -6,6 +6,9 @@ from livros.forms import LoginForms, CadastroForms,ResenhaForms
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
 
 def get_page_range(livros_pagina, num_pages_to_show=1):
     total_pages = livros_pagina.paginator.num_pages
@@ -43,6 +46,8 @@ def index(request):
 def livro(request, livro_id):
     form = ResenhaForms()
     livro = get_object_or_404(Livro, pk=livro_id)
+    resenhas = Resenha.objects.filter(livro=livro)
+    resenhas = resenhas.order_by('-data_publicacao')
     if not request.user.is_authenticated:
         messages.error(request, 'Usuário não logado')
         return redirect('login')
@@ -55,9 +60,15 @@ def livro(request, livro_id):
 
             resenha = Resenha.objects.create(livro=livro, usuario=usuario, titulo=titulo, texto=texto)
             resenha.calcular_media_avaliacoes()
-            resenha.calcular_num_avaliacoes_resenhas()
-   
-    resenhas = Resenha.objects.filter(livro=livro)
+            resenha.calcular_num_avaliacoes_resenhas() 
+            url = reverse('livro', kwargs={'livro_id': livro_id})
+            url += '?abrir=resenhas'
+            return HttpResponseRedirect(url)
+    if "ordem" in request.GET:
+        ordem = request.GET['ordem']
+        if ordem:
+            resenhas = resenhas.order_by(ordem)
+
     return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas, "form": form})
 
 def buscar(request):

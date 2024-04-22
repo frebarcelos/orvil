@@ -10,12 +10,12 @@
               Ordenar por
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=Title">Titulo Asc</a></li>
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-Title">Titulo Desc</a></li>
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=authors">Autor Asc</a></li>
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-authors">Autor Desc</a></li>
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=publishedDate">data de publicação Asc</a></li>
-              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-publishedDate">data de publicação Desc</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=Title">Titulo (A-Z)</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-Title">Titulo (Z-A)</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=authors">Autor (A-Z)</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-authors">Autor (Z-A)</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=publishedDate">data de publicação (Mais novos)</a></li>
+              <li><a class="dropdown-item" href="{% url 'buscar' %}?{{parametros_da_busca}}&ordem=-publishedDate">data de publicação (Mais antigos)</a></li>
 
             </ul>
           </div>

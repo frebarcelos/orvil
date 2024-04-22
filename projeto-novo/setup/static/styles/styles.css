@@ -120,3 +120,8 @@
     font-size: large;
     font-weight: 600;
 }
+.div_botoes_resenhas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
