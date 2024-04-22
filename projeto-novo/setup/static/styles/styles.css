@@ -125,3 +125,16 @@
     align-items: center;
     justify-content: space-between;
 }
+.botao_Avaliar_resenha {
+    width: 80%; 
+    align-items: flex-end;
+}
+.botoes_avaliacao_resenha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.selecionarNota {
+    display: flex;
+    flex-direction: column;
+}

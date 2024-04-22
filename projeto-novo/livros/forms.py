@@ -94,3 +94,8 @@ class ResenhaForms(forms.Form):
             }
         )
     )
+
+class NotaForm(forms.Form):
+    nota_choices = [(i, i) for i in range(1, 6)]  
+    nota = forms.ChoiceField(choices=nota_choices, label="Selecione a nota")
+    resenha_id = forms.IntegerField(widget=forms.HiddenInput())  

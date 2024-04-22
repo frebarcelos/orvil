@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from livros.models import Livro, Resenha
+from livros.models import Livro, Resenha, Avaliacao
 from django.core.paginator import Paginator
 from urllib.parse import urlencode
-from livros.forms import LoginForms, CadastroForms,ResenhaForms
+from livros.forms import LoginForms, CadastroForms,ResenhaForms,NotaForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib import messages
@@ -44,32 +44,48 @@ def index(request):
     return render(request, 'livros/index.html', {"livros": livros_pagina, "page_range": page_range})
 
 def livro(request, livro_id):
-    form = ResenhaForms()
     livro = get_object_or_404(Livro, pk=livro_id)
-    resenhas = Resenha.objects.filter(livro=livro)
-    resenhas = resenhas.order_by('-data_publicacao')
+    resenhas = Resenha.objects.filter(livro=livro).order_by('-data_publicacao')
+    
     if not request.user.is_authenticated:
         messages.error(request, 'Usuário não logado')
         return redirect('login')
+        
     if request.method == 'POST':
-        form = ResenhaForms(request.POST)
-        if form.is_valid():
-            titulo = form['titulo_resenha'].value()
-            texto = form['texto_resenha'].value()
-            usuario = request.user
+        if 'nota' in request.POST:  
+            form = NotaForm(request.POST)
+            if form.is_valid():
+                usuario = request.user
+                nota = form.cleaned_data['nota']
+                resenha_id = form.cleaned_data['resenha_id']
+                resenha = get_object_or_404(Resenha, pk=resenha_id)
+                if Avaliacao.objects.filter(resenha=resenha, usuario=usuario).exists():
+                    messages.error(request, 'Você já avaliou essa resenha.')
+                    return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
+                avaliacao = Avaliacao.objects.create(resenha=resenha, usuario=usuario, nota=nota)
+                messages.success(request, 'Avaliação registrada com sucesso.')
+                return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
+        else:  
+            form = ResenhaForms(request.POST)
+            if form.is_valid():
+                titulo = form.cleaned_data['titulo_resenha']
+                texto = form.cleaned_data['texto_resenha']
+                usuario = request.user
+                resenha = Resenha.objects.create(livro=livro, usuario=usuario, titulo=titulo, texto=texto)
+                resenha.calcular_media_avaliacoes()
+                resenha.calcular_num_avaliacoes_resenhas() 
+                messages.success(request, 'Resenha criada com sucesso.')
+                return HttpResponseRedirect(reverse('livro', kwargs={'livro_id': livro_id}) + '?abrir=resenhas')
+    else:
+        form = ResenhaForms()
+        form_avaliacao = NotaForm()
 
-            resenha = Resenha.objects.create(livro=livro, usuario=usuario, titulo=titulo, texto=texto)
-            resenha.calcular_media_avaliacoes()
-            resenha.calcular_num_avaliacoes_resenhas() 
-            url = reverse('livro', kwargs={'livro_id': livro_id})
-            url += '?abrir=resenhas'
-            return HttpResponseRedirect(url)
     if "ordem" in request.GET:
         ordem = request.GET['ordem']
         if ordem:
             resenhas = resenhas.order_by(ordem)
 
-    return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas, "form": form})
+    return render(request, 'livros/livro.html', {"livro": livro, "resenhas": resenhas, "form": form, "form_avaliacao": form_avaliacao})
 
 def buscar(request):
     if not request.user.is_authenticated:

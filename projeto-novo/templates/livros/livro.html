@@ -59,7 +59,22 @@
                       <h5 class="card-title div_titulo"><div class="titulo_resenha">"{{ resenha.titulo }}"</div> por {{ resenha.usuario.username }}</h5>
                       <p class="card-text">Texto da resenha: {{ resenha.texto }}</p>
                       <p class="card-text">Data de publicação: {{ resenha.data_publicacao }}</p>
-                      <div class="avalicao_resenha">
+                      <div class="botoes_avaliacao_resenha">
+                        <form class="d-flex botao_Avaliar_resenha" role="search" action="{% url 'livro' livro.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="selecionarNota">
+                                <label for="id_nota" class="form-label">Selecione a nota</label>
+                                <select name="nota" id="id_nota" class="form-select">
+                                    {% for value, text in form_avaliacao.fields.nota.choices %}
+                                        <option value="{{ value }}">{{ text }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="hidden" name="resenha_id" value="{{ resenha.id }}">                                
+                            </div>  
+                            <button class="btn btn-outline-secondary" type="submit" style="margin-left: 15px;">Avaliar</button>                         
+                        </form>                        
+
+                        <div class="avalicao_resenha">
                         <div class="rating">
                             {% load custom_filters %}
                             {%for i in resenha.media_avaliacoes|numeroEstrelasCheias %}                      
@@ -80,9 +95,9 @@
                             {% endfor %}                                      
                                                          
                           </div>
-                        <p class="card-text">N° de avaliações recebidas: {{ resenha.num_avaliacoes_resenhas }}
-                      </div>
+                        <p class="card-text">N° de avaliações recebidas: {{ resenha.num_avaliacoes_resenhas }}                      
                       </p>
+                    </div>
                     </div>
                   </div>
               {% endfor %}
