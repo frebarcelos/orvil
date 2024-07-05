@@ -212,4 +212,47 @@ class ViewTestCase(TestCase):
         
         self.assertEqual(response.status_code, 302)
                 
-   
+
+class CRLFInjectionTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.livro_url = reverse('livro', args=[1])
+
+    def test_crlf_injection_in_header(self):
+        response = self.client.get(self.livro_url + '?input=%0d%0aBadHeader: badvalue')
+        self.assertNotIn('BadHeader: badvalue', response.headers)
+        self.assertEqual(response.status_code, 200)
+
+    def test_crlf_injection_in_body(self):
+        response = self.client.post(self.livro_url, {'input': '\r\nBadHeader: badvalue'})
+        self.assertNotIn('BadHeader: badvalue', response.content.decode())
+        self.assertEqual(response.status_code, 200)
+
+
+
+class SQLInjectionTestCase(TestCase):
+    def setUp(self):
+        self.test_object = Livro.objects.create(
+            Title="Teste",
+            description="Descricao teste",
+            authors="Autor teste",
+            image="imagem teste",
+            previewLink="link teste",
+            publisher="Editora teste",
+            publishedDate=datetime.datetime.now(),
+            infoLink="link teste",
+            categories="categoria teste",
+            ratingsCount="1"
+        )
+
+        self.livro_url = reverse('livro', args=[1])
+
+    def test_sql_injection_via_url(self):
+        response = self.client.get(self.livro_url + "?param=' OR '1'='1")
+        self.assertNotContains(response, self.test_object.name)
+        self.assertEqual(response.status_code, 400)
+
+    def test_sql_injection_via_form(self):
+        response = self.client.post(self.livro_url, data={'param': "' OR '1'='1"})
+        self.assertNotContains(response, self.test_object.name)
+        self.assertEqual(response.status_code, 400)
