@@ -213,46 +213,50 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
                 
 
+class SQLInjectionTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        # Configurar um usuário de teste
+        User.objects.create_user(username='user1', password='pass1')
+
+    def test_sql_injection(self):
+        # Tentativa de SQL Injection
+        injection_string = "' OR '1'='1"
+        login = self.client.login(username='user1', password=injection_string)
+        self.assertTrue(login)
+
+    def test_secure_login(self):
+        # Teste com consulta segura
+        login = self.client.login(username='user1', password='pass1')
+        self.assertTrue(login)
+
+
 class CRLFInjectionTestCase(TestCase):
     def setUp(self):
         self.client = Client()
+        # Configurar um usuário de teste
+        User.objects.create_user(username='user1', password='pass1')
+        self.client.login(username='user1', password='pass1')
         self.livro_url = reverse('livro', args=[1])
+        self.index_url = reverse('index')
 
-    def test_crlf_injection_in_header(self):
-        response = self.client.get(self.livro_url + '?input=%0d%0aBadHeader: badvalue')
-        self.assertNotIn('BadHeader: badvalue', response.headers)
-        self.assertEqual(response.status_code, 200)
+    def test_crlf_injection(self):
+        crlf_injection_string = "text/html; charset=utf-8\r\n<script>alert('XSS');</script>"
+        response = self.client.get(self.index_url, {'content_type': crlf_injection_string})
 
-    def test_crlf_injection_in_body(self):
-        response = self.client.post(self.livro_url, {'input': '\r\nBadHeader: badvalue'})
-        self.assertNotIn('BadHeader: badvalue', response.content.decode())
-        self.assertEqual(response.status_code, 200)
+        # Verificar se o cabeçalho malicioso foi inserido
+        self.assertIn("<script>alert('XSS');</script>", response.headers)
+        
+        # Verificar se o cabeçalho Content-Type foi sanitizado
+        self.assertIn('Content-Type', response.headers)
+        self.assertNotIn('\r', response.headers['Content-Type'])
+        self.assertNotIn('\n', response.headers['Content-Type'])
+        self.assertEqual(response.headers['Content-Type'], 'text/html; charset=utf-8')
 
-
-
-class SQLInjectionTestCase(TestCase):
-    def setUp(self):
-        self.test_object = Livro.objects.create(
-            Title="Teste",
-            description="Descricao teste",
-            authors="Autor teste",
-            image="imagem teste",
-            previewLink="link teste",
-            publisher="Editora teste",
-            publishedDate=datetime.datetime.now(),
-            infoLink="link teste",
-            categories="categoria teste",
-            ratingsCount="1"
-        )
-
-        self.livro_url = reverse('livro', args=[1])
-
-    def test_sql_injection_via_url(self):
-        response = self.client.get(self.livro_url + "?param=' OR '1'='1")
-        self.assertNotContains(response, self.test_object.name)
-        self.assertEqual(response.status_code, 400)
-
-    def test_sql_injection_via_form(self):
-        response = self.client.post(self.livro_url, data={'param': "' OR '1'='1"})
-        self.assertNotContains(response, self.test_object.name)
-        self.assertEqual(response.status_code, 400)
+    def test_normal_input(self):
+        # Teste com entrada normal
+        normal_content_type = "text/html; charset=utf-8"
+        response = self.client.get(self.index_url, {'content_type': normal_content_type})
+        # Verificar se o cabeçalho Content-Type está correto
+        self.assertIn('Content-Type', response.headers)
+        self.assertEqual(response.headers['Content-Type'], normal_content_type)

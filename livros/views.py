@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
-
 def get_page_range(livros_pagina, num_pages_to_show=1):
     total_pages = livros_pagina.paginator.num_pages
     current_page = livros_pagina.number    
